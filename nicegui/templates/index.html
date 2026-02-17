@@ -115,8 +115,8 @@
     </div>
     <script type="module">
       // Load DOMPurify for HTML sanitization, polyfill for browsers without native setHTML
+      import DOMPurify from "dompurify";
       if (typeof Element.prototype.setHTML !== "function") {
-        const { default: DOMPurify } = await import("dompurify");
         Element.prototype.setHTML = function (html) {
           this.innerHTML = DOMPurify.sanitize(html);
         };
