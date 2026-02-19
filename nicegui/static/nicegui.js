@@ -534,6 +534,7 @@ function createApp(elements, options) {
           }
 
           invalidateVnodeCache(Object.keys(msg).map(Number));
+          this.$forceUpdate(); // NOTE: vnode cache prevents Vue's dependency tracking from capturing all elements
 
           await this.$nextTick();
           for (const [id, element] of Object.entries(msg)) {
