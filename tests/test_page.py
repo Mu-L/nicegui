@@ -8,7 +8,7 @@ from fastapi.responses import PlainTextResponse
 from selenium.webdriver.common.by import By
 
 from nicegui import app, background_tasks, ui
-from nicegui.testing import Screen
+from nicegui.testing import Screen, User
 
 
 def test_page(screen: Screen):
@@ -339,3 +339,17 @@ def test_warning_if_response_takes_too_long(screen: Screen):
     httpx.get(f'http://localhost:{Screen.PORT}/', timeout=5)
     screen.wait(1)
     screen.assert_py_logger('WARNING', re.compile('Response for / not ready after 0.5 seconds'))
+
+
+async def test_async_page_does_not_leak_event_wait_tasks(user: User):
+    @ui.page('/')
+    async def page():
+        ui.label('Hello')
+
+    for _ in range(5):
+        await user.open('/')
+    await asyncio.sleep(0.1)
+    assert not any(
+        t.get_name().startswith('wait for connection') and not t.done()
+        for t in asyncio.all_tasks()
+    ), 'connection-wait tasks should be cancelled after page coroutine completes'
