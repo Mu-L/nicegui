@@ -13,7 +13,9 @@
     "vanilla-jsoneditor": "^3.10.0"
   },
   "overrides": {
-    "lodash-es": "^4.17.23"
+    "ajv": ">=8.18.0",
+    "lodash-es": "^4.17.23",
+    "svelte": ">=5.51.5"
   },
   "devDependencies": {
     "rollup": "^4.52.3",
